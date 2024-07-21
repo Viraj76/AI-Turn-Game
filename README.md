@@ -1,3 +1,6 @@
+#APK link
+https://drive.google.com/file/d/18e7GBeK8o0ygL_c4P1mb64L73OE9bjWk/view?usp=sharing
+
 # Tech stack used
 - **Kotlin**: Programming language used for development.
 - **Jetpack Compose**: UI toolkit for building modern, native Android user interfaces.
