@@ -2,7 +2,6 @@ package com.appsv.turngame.presentation.game_history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.appsv.turngame.domain.repository.GameHistoryRepository
 
 class GameHistoryViewModelFactory(private val repository: GameHistoryRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
