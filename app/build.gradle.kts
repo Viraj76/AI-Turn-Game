@@ -59,7 +59,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,6 +68,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //Splash Api
     implementation (libs.androidx.core.splashscreen)
+    // material and foundation
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.material3.android)
 
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
@@ -84,4 +86,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    // navigation
+    implementation(libs.navigation.compose)
 }
