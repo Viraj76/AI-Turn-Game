@@ -1,17 +1,21 @@
 package com.appsv.turngame.presentation.game_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.appsv.turngame.R
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
@@ -36,11 +40,16 @@ fun GameScreen(modifier: Modifier = Modifier) {
     if (showInfoDialog) {
         AlertDialog(
             onDismissRequest = { /* Handle dismiss */ },
-            title = { Text("Game Rules", color = Color.White) },
+            title = {
+                Text(
+                    "Game Rules",
+                    color = colorResource(id = R.color.white)
+                )
+            },
             text = {
                 Text(
                     "Welcome to the game!\n\nRules:\n- You and the AI take turns selecting boxes.\n- You can select 1 to 4 boxes in your turn.\n- If you are forced to select the last box, you lose.",
-                    color = Color.White
+                    color = colorResource(id = R.color.white)
                 )
             },
             confirmButton = {
@@ -52,10 +61,12 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             }
         )
-    } else if (showInputDialog) {
+    }
+
+    else if (showInputDialog) {
         AlertDialog(
             onDismissRequest = { },
-            title = { Text("Select Number of Boxes", color = Color.White) },
+            title = { Text("Select Number of Boxes", color = colorResource(id = R.color.white)) },
             text = {
                 Column {
                     TextField(
@@ -63,14 +74,17 @@ fun GameScreen(modifier: Modifier = Modifier) {
                         onValueChange = { newValue ->
                             userSelection = (newValue.toIntOrNull() ?: "").toString()
                         },
-                        label = { Text("Select 1 to 4 boxes", color = Color.White) },
+                        label = { Text("Select 1 to 4 boxes", color = colorResource(id = R.color.white)) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.White,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
+                            focusedLabelColor = colorResource(id = R.color.white),
+                            unfocusedLabelColor = colorResource(id = R.color.white),
+                            focusedTextColor = colorResource(id = R.color.white),
+                            unfocusedTextColor = colorResource(id = R.color.white)
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
+                        ),
                     )
                     if (errorMessage.isNotEmpty()) {
                         Text(
@@ -83,7 +97,7 @@ fun GameScreen(modifier: Modifier = Modifier) {
             },
             confirmButton = {
                 Button(onClick = {
-                    if(userSelection.isNotEmpty()){
+                    if (userSelection.isNotEmpty()) {
                         if (userSelection.toInt() in 1..4) {
                             showInputDialog = false
                             errorMessage = ""
@@ -92,7 +106,8 @@ fun GameScreen(modifier: Modifier = Modifier) {
                                 gameMessage = resultMessage
                                 if (boxStates.count { it == BoxState.Unclicked } > 1) {
                                     aiMove(userSelection, boxStates)
-                                    val remainingBoxes = boxStates.count { it == BoxState.Unclicked }
+                                    val remainingBoxes =
+                                        boxStates.count { it == BoxState.Unclicked }
                                     if (remainingBoxes == 1) {
                                         gameMessage = "You lost! The last box was selected."
                                         gameOver = true
@@ -118,14 +133,16 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             }
         )
-    } else if (showGameOverDialog) {
+    }
+
+    else if (showGameOverDialog) {
         AlertDialog(
             onDismissRequest = { },
-            title = { Text("Game Over", color = Color.White) },
+            title = { Text("Game Over", color = colorResource(id = R.color.white)) },
             text = {
                 Text(
                     "You lost! Would you like to play again?",
-                    color = Color.White
+                    color = colorResource(id = R.color.white)
                 )
             },
             confirmButton = {
@@ -147,7 +164,9 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             }
         )
-    } else {
+    }
+
+    else {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = gameMessage, color = Color.White)
             Column {
@@ -177,7 +196,7 @@ fun GameScreen(modifier: Modifier = Modifier) {
 
             if (!gameOver) {
                 Button(
-                    modifier  = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = { showInputDialog = true }
                 ) {
                     Text(
