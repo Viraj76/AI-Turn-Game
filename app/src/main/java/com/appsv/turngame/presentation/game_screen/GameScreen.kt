@@ -7,19 +7,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.appsv.turngame.R
+import com.appsv.turngame.data.local.room.history.GameHistory
+import com.appsv.turngame.presentation.navigation.Screens
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+
 @Composable
-fun GameScreen(modifier: Modifier = Modifier) {
+fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
     var showInfoDialog by remember { mutableStateOf(true) }
     var showInputDialog by remember { mutableStateOf(false) }
     var userSelection by remember { mutableStateOf("") }
@@ -136,6 +145,11 @@ fun GameScreen(modifier: Modifier = Modifier) {
     }
 
     else if (showGameOverDialog) {
+        val gameHistory = GameHistory(
+            lastUserSelections = userSelection.toInt(),
+            gameOutcome = "You lost!"
+        )
+        gameViewModel.saveGameHistory(gameHistory)
         AlertDialog(
             onDismissRequest = { },
             title = { Text("Game Over", color = colorResource(id = R.color.white)) },
@@ -147,7 +161,6 @@ fun GameScreen(modifier: Modifier = Modifier) {
             },
             confirmButton = {
                 Button(onClick = {
-                    // Reset the game
                     boxStates =
                         mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }
                     gameMessage = ""
@@ -159,51 +172,93 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             },
             dismissButton = {
-                Button(onClick = { }) {
-                    Text("Exit")
-                }
+
             }
         )
     }
 
     else {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = gameMessage, color = Color.White)
-            Column {
 
-                repeat(5) { rowIndex ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(1.dp)
-                    ) {
-                        repeat(4) { columnIndex ->
-                            val boxIndex = rowIndex * 4 + columnIndex
-                            if (boxIndex < 20) {
-                                GameBox(boxNumber = boxIndex, boxState = boxStates[boxIndex])
-                            }
-                        }
-                    }
-                }
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+            Column(modifier = Modifier.padding(10.dp)) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val boxIndex = 20
-                    GameBox(boxNumber = boxIndex, boxState = boxStates[boxIndex])
+
+                    Text(
+                        fontWeight = FontWeight.Bold,
+                        text = "History",
+                        color = Color.Yellow
+                    )
+
+                    Spacer(modifier = Modifier.width(2.dp))
+
+                    IconButton(onClick = {
+                        navController.navigate(Screens.GameHistoryScreen.route)
+                    }) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.baseline_history_24),
+                            contentDescription = "History",
+                            tint = Color.Yellow
+                        )
+                    }
+
+
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = gameMessage,
+                    color = Color.White
+                )
+
+
+
+                Column {
+
+                    repeat(5) { rowIndex ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(1.dp)
+                        ) {
+                            repeat(4) { columnIndex ->
+                                val boxIndex = rowIndex * 4 + columnIndex
+                                if (boxIndex < 20) {
+                                    GameBox(boxNumber = boxIndex, boxState = boxStates[boxIndex])
+                                }
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        val boxIndex = 20
+                        GameBox(boxNumber = boxIndex, boxState = boxStates[boxIndex])
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                if (!gameOver) {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { showInputDialog = true }
+                    ) {
+                        Text(
+                            "Make Your Move"
+                        )
+                    }
                 }
             }
 
-            if (!gameOver) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { showInputDialog = true }
-                ) {
-                    Text(
-                        "Make Your Move"
-                    )
-                }
-            }
         }
     }
 }

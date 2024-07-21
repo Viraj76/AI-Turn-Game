@@ -5,13 +5,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.appsv.turngame.data.local.room.history.GameHistory
+import com.appsv.turngame.data.local.room.history.GameHistoryDao
 import com.appsv.turngame.data.local.room.users.UserEntity
 import com.appsv.turngame.data.local.room.users.UsersDao
 
-@Database(entities = [UserEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class, GameHistory::class], version = 2, exportSchema = false)
 abstract class TurnAppDatabase : RoomDatabase(){
 
     abstract fun usersDao() : UsersDao
+    abstract fun gameHistoryDap() : GameHistoryDao
 
     companion object{
 

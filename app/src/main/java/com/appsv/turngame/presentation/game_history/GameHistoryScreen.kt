@@ -1,42 +1,50 @@
-package com.appsv.turngame.presentation.game_history
-
-import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appsv.turngame.data.local.room.history.GameHistory
-import com.appsv.turngame.data.local.room.history.GameHistoryDao
-import com.appsv.turngame.domain.repository.GameHistoryRepository
-
-
-@Preview
-@Composable
-private fun prevv() {
-    GameHistoryScreen(context = LocalContext.current)
-}
+import com.appsv.turngame.presentation.game_history.GameHistoryState
+import com.appsv.turngame.presentation.game_screen.GameViewModel
 
 @Composable
-fun GameHistoryScreen(context: Context) {
-    val repository = remember { GameHistoryRepository(context) }
-    val viewModel: GameHistoryViewModel = viewModel(factory = GameHistoryViewModelFactory(repository))
-    
-    val history by viewModel.gameHistory
-    val isEmpty by viewModel.isEmpty
+fun GameHistoryScreen(
+    state: GameHistoryState
+) {
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        if (isEmpty) {
-            Text("No game history available.", style = MaterialTheme.typography.bodyMedium)
-        } else {
-            LazyColumn {
-                items(history) { gameHistory ->
-                    GameHistoryItem(gameHistory)
+
+    if (state.gameHistoryList.isEmpty()) {
+        Text(
+            text = "No history available",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize()
+        )
+    }
+
+
+    else {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)) {
+
+            LazyColumn(
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(state.gameHistoryList) { gameHistory ->
+                    GameHistoryItem(gameHistory = gameHistory)
                 }
             }
         }
@@ -45,10 +53,36 @@ fun GameHistoryScreen(context: Context) {
 
 @Composable
 fun GameHistoryItem(gameHistory: GameHistory) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text("User Selections: ${gameHistory.userSelections.joinToString()}")
-        Text("AI Selections: ${gameHistory.aiSelections.joinToString()}")
-        Text("Outcome: ${gameHistory.gameOutcome}")
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Column(
+
+        ) {
+            Text(
+                text = "Date: ${gameHistory.timestamp}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Last User Selection: ${gameHistory.lastUserSelections}",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Outcome: ${gameHistory.gameOutcome}",
+                fontSize = 14.sp,
+                color = Color.Red
+            )
+        }
     }
 }

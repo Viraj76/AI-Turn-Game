@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
@@ -37,99 +38,96 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(16.dp)) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        Column(modifier = Modifier.padding(16.dp)) {
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = username,
-            colors = OutlinedTextFieldDefaults.colors().copy(
-                focusedTextColor = colorResource(id = R.color.light_blue),
-                unfocusedTextColor = colorResource(id = R.color.light_blue),
-                focusedContainerColor = colorResource(id = R.color.dark_blue),
-                unfocusedContainerColor = colorResource(id = R.color.dark_blue),
-                focusedLeadingIconColor = colorResource(id = R.color.light_blue),
-                unfocusedLeadingIconColor = colorResource(id = R.color.light_blue),
-                focusedIndicatorColor = colorResource(id = R.color.light_blue),
-                unfocusedIndicatorColor = colorResource(id = R.color.light_blue),
-                focusedLabelColor = colorResource(id = R.color.light_blue),
-                unfocusedLabelColor = colorResource(id = R.color.light_blue),
-                cursorColor = colorResource(id = R.color.light_blue)
-            ),
-            onValueChange = { username = it },
-            label = { Text(text = "Enter your username") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {  },
-            ),
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = password,
-            colors = OutlinedTextFieldDefaults.colors().copy(
-                focusedTextColor = colorResource(id = R.color.light_blue),
-                unfocusedTextColor = colorResource(id = R.color.light_blue),
-                focusedContainerColor = colorResource(id = R.color.dark_blue),
-                unfocusedContainerColor = colorResource(id = R.color.dark_blue),
-                focusedLeadingIconColor = colorResource(id = R.color.light_blue),
-                unfocusedLeadingIconColor = colorResource(id = R.color.light_blue),
-                focusedIndicatorColor = colorResource(id = R.color.light_blue),
-                unfocusedIndicatorColor = colorResource(id = R.color.light_blue),
-                focusedLabelColor = colorResource(id = R.color.light_blue),
-                unfocusedLabelColor = colorResource(id = R.color.light_blue),
-                cursorColor = colorResource(id = R.color.light_blue)
-            ),
-            onValueChange = { password = it },
-            label = { Text(text = "Enter your password") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {  },
-            ),
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = "Search Icon") },
-            textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
-            visualTransformation = PasswordVisualTransformation()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (errorMessage.isNotEmpty()) {
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                style = MaterialTheme.typography.bodySmall
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                value = username,
+                colors = OutlinedTextFieldDefaults.colors().copy(
+                    focusedTextColor = colorResource(id = R.color.light_blue),
+                    unfocusedTextColor = colorResource(id = R.color.light_blue),
+                    focusedContainerColor = colorResource(id = R.color.dark_blue),
+                    unfocusedContainerColor = colorResource(id = R.color.dark_blue),
+                    focusedLeadingIconColor = colorResource(id = R.color.light_blue),
+                    unfocusedLeadingIconColor = colorResource(id = R.color.light_blue),
+                    focusedIndicatorColor = colorResource(id = R.color.light_blue),
+                    unfocusedIndicatorColor = colorResource(id = R.color.light_blue),
+                    focusedLabelColor = colorResource(id = R.color.light_blue),
+                    unfocusedLabelColor = colorResource(id = R.color.light_blue),
+                    cursorColor = colorResource(id = R.color.light_blue)
+                ),
+                onValueChange = { username = it },
+                label = { Text(text = "Enter your username" , color = Color.White)  },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {  },
+                ),
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
             )
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        NormalButton(text = "Login") {
-            val validLogin = (username == "admin" && password == "admin1234") ||
-                    (username == "guest" && password == "guest1234")
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                value = password,
+                colors = OutlinedTextFieldDefaults.colors().copy(
+                    focusedTextColor = colorResource(id = R.color.light_blue),
+                    unfocusedTextColor = colorResource(id = R.color.light_blue),
+                    focusedContainerColor = colorResource(id = R.color.dark_blue),
+                    unfocusedContainerColor = colorResource(id = R.color.dark_blue),
+                    focusedLeadingIconColor = colorResource(id = R.color.light_blue),
+                    unfocusedLeadingIconColor = colorResource(id = R.color.light_blue),
+                    focusedIndicatorColor = colorResource(id = R.color.light_blue),
+                    unfocusedIndicatorColor = colorResource(id = R.color.light_blue),
+                    focusedLabelColor = colorResource(id = R.color.light_blue),
+                    unfocusedLabelColor = colorResource(id = R.color.light_blue),
+                    cursorColor = colorResource(id = R.color.light_blue)
+                ),
+                onValueChange = { password = it },
+                label = { Text(text = "Enter your password",color = Color.White) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurface),
+            )
 
-            if (validLogin) {
-                val userEntity = UserEntity(username = username, password = password)
-               viewModel.saveUser(userEntity)
-                errorMessage = ""
-                navController.navigate(Screens.GameScreen.route){
+            Spacer(modifier = Modifier.height(8.dp))
 
+            if (errorMessage.isNotEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            NormalButton(text = "Login") {
+                val validLogin = (username == "admin" && password == "admin1234") ||
+                        (username == "guest" && password == "guest1234")
+
+                if (validLogin) {
+                    val userEntity = UserEntity(username = username, password = password)
+                    viewModel.saveUser(userEntity)
+                    errorMessage = ""
+                    navController.navigate(Screens.GameScreen.route){
+
+                    }
+                } else {
+                    errorMessage = "Invalid username or password. Please try again."
                 }
-            } else {
-                errorMessage = "Invalid username or password. Please try again."
             }
         }
+
     }
 }

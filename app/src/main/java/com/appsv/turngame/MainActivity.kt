@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.appsv.turngame.presentation.game_screen.GameHistoryViewModelFactory
+import com.appsv.turngame.presentation.game_screen.GameViewModel
 import com.appsv.turngame.presentation.login_screen.LoginScreen
 import com.appsv.turngame.presentation.login_screen.UsersViewModel
 import com.appsv.turngame.presentation.navigation.Screens
@@ -30,6 +32,9 @@ import com.appsv.turngame.presentation.navigation.SetUpNavGraph
 import com.appsv.turngame.ui.theme.TurnGameTheme
 
 class MainActivity : ComponentActivity() {
+    val viewModel: UsersViewModel by viewModels {
+        UsersViewModelFactory(application)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -37,27 +42,28 @@ class MainActivity : ComponentActivity() {
                 Color(0xFF03045E).toArgb(),     // res color as int
             )
         )
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                viewModel.splashCondition.value
+            }
+        }
         setContent {
             TurnGameTheme {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(colorResource(id = R.color.dark_blue)),
-                    contentAlignment = Alignment.Center
+
 
                 ) {
-                    val viewModel: UsersViewModel by viewModels {
-                        UsersViewModelFactory(application)
-                    }
+
                     val state by viewModel.state.collectAsState()
 
-                    val route = if(state.login){
-                        Screens.GameScreen.route
-                    } else {
-                        Screens.LoginScreen.route
+                    val gameViewModel : GameViewModel by viewModels {
+                        GameHistoryViewModelFactory(application)
                     }
-                    SetUpNavGraph(startDestination =  route , viewModel)
+
+                    SetUpNavGraph(startDestination =  viewModel.startDestination , viewModel,gameViewModel)
                 }
             }
         }

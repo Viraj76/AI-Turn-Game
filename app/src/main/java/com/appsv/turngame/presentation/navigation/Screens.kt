@@ -11,4 +11,5 @@ sealed class Screens(
 
     data object LoginScreen : Screens(route = "login_screen")
     data object GameScreen : Screens(route = "game_screen")
+    data object GameHistoryScreen : Screens(route = "game_history_screen")
 }
