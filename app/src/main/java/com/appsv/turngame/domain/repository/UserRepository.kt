@@ -6,4 +6,5 @@ interface UserRepository {
 
    suspend fun isLoggedIn() : Int?
 
+   suspend fun insertUser(userEntity: UserEntity)
 }

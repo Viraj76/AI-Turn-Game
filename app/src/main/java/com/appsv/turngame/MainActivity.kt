@@ -26,6 +26,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.appsv.turngame.presentation.login_screen.LoginScreen
 import com.appsv.turngame.presentation.login_screen.UsersViewModel
 import com.appsv.turngame.presentation.navigation.Screens
+import com.appsv.turngame.presentation.navigation.SetUpNavGraph
 import com.appsv.turngame.ui.theme.TurnGameTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,8 +51,13 @@ class MainActivity : ComponentActivity() {
                         UsersViewModelFactory(application)
                     }
                     val state by viewModel.state.collectAsState()
-                    Log.d("APPLOG" , state.toString())
-                    LoginScreen()
+
+                    val route = if(state.login){
+                        Screens.GameScreen.route
+                    } else {
+                        Screens.LoginScreen.route
+                    }
+                    SetUpNavGraph(startDestination =  route , viewModel)
                 }
             }
         }

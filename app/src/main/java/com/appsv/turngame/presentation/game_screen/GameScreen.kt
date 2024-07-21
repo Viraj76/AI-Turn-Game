@@ -12,13 +12,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.appsv.turngame.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun GameScreen(modifier: Modifier = Modifier) {
     var showInfoDialog by remember { mutableStateOf(true) }
     var showInputDialog by remember { mutableStateOf(false) }
     var userSelection by remember { mutableStateOf("") }
-    var boxStates by remember { mutableStateOf(mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }) }
+    var boxStates by remember {
+        mutableStateOf(mutableStateListOf<BoxState>().apply {
+            repeat(21) {
+                add(
+                    BoxState.Unclicked
+                )
+            }
+        })
+    }
     var gameMessage by remember { mutableStateOf("") }
     var gameOver by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -27,9 +36,12 @@ fun GameScreen(modifier: Modifier = Modifier) {
     if (showInfoDialog) {
         AlertDialog(
             onDismissRequest = { /* Handle dismiss */ },
-            title = { Text("Game Rules") },
+            title = { Text("Game Rules", color = Color.White) },
             text = {
-                Text("Welcome to the game!\n\nRules:\n- You and the AI take turns selecting boxes.\n- You can select 1 to 4 boxes in your turn.\n- The AI will select the remaining boxes to make the total 5.\n- If you are forced to select the last box, you lose.")
+                Text(
+                    "Welcome to the game!\n\nRules:\n- You and the AI take turns selecting boxes.\n- You can select 1 to 4 boxes in your turn.\n- If you are forced to select the last box, you lose.",
+                    color = Color.White
+                )
             },
             confirmButton = {
                 Button(onClick = {
@@ -42,8 +54,8 @@ fun GameScreen(modifier: Modifier = Modifier) {
         )
     } else if (showInputDialog) {
         AlertDialog(
-            onDismissRequest = { /* Handle dismiss */ },
-            title = { Text("Select Number of Boxes") },
+            onDismissRequest = { },
+            title = { Text("Select Number of Boxes", color = Color.White) },
             text = {
                 Column {
                     TextField(
@@ -51,8 +63,14 @@ fun GameScreen(modifier: Modifier = Modifier) {
                         onValueChange = { newValue ->
                             userSelection = (newValue.toIntOrNull() ?: "").toString()
                         },
-                        label = { Text("Select 1 to 4 boxes") },
-                        modifier = Modifier.fillMaxWidth()
+                        label = { Text("Select 1 to 4 boxes", color = Color.White) },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedLabelColor = Color.White,
+                            unfocusedLabelColor = Color.White,
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
+                        )
                     )
                     if (errorMessage.isNotEmpty()) {
                         Text(
@@ -65,27 +83,31 @@ fun GameScreen(modifier: Modifier = Modifier) {
             },
             confirmButton = {
                 Button(onClick = {
-                    if (userSelection.toInt() in 1..4) {
-                        showInputDialog = false
-                        errorMessage = ""
-                        gameMessage = "User selected $userSelection box(es)."
-                        userSelectBoxes(userSelection, boxStates) { resultMessage ->
-                            gameMessage = resultMessage
-                            if (boxStates.count { it == BoxState.Unclicked } > 1) {
-                                aiMove(userSelection, boxStates)
-                                val remainingBoxes = boxStates.count { it == BoxState.Unclicked }
-                                if (remainingBoxes == 1) {
-                                    gameMessage = "You lost! The last box was selected."
-                                    gameOver = true
-                                    showGameOverDialog = true
-                                } else {
-                                    gameMessage = "Your turn is over. AI's turn."
+                    if(userSelection.isNotEmpty()){
+                        if (userSelection.toInt() in 1..4) {
+                            showInputDialog = false
+                            errorMessage = ""
+                            gameMessage = "User selected $userSelection box(es)."
+                            userSelectBoxes(userSelection, boxStates) { resultMessage ->
+                                gameMessage = resultMessage
+                                if (boxStates.count { it == BoxState.Unclicked } > 1) {
+                                    aiMove(userSelection, boxStates)
+                                    val remainingBoxes = boxStates.count { it == BoxState.Unclicked }
+                                    if (remainingBoxes == 1) {
+                                        gameMessage = "You lost! The last box was selected."
+                                        gameOver = true
+                                        showGameOverDialog = true
+                                    } else {
+                                        gameMessage =
+                                            "AI's turn done. Make your turn again by clicking the button below!"
+                                    }
                                 }
                             }
+                        } else {
+                            errorMessage = "Please select a number between 1 and 4."
                         }
-                    } else {
-                        errorMessage = "Please select a number between 1 and 4."
                     }
+
                 }) {
                     Text("Confirm")
                 }
@@ -98,13 +120,19 @@ fun GameScreen(modifier: Modifier = Modifier) {
         )
     } else if (showGameOverDialog) {
         AlertDialog(
-            onDismissRequest = { /* Handle dismiss */ },
-            title = { Text("Game Over") },
-            text = { Text("You lost! Would you like to play again?") },
+            onDismissRequest = { },
+            title = { Text("Game Over", color = Color.White) },
+            text = {
+                Text(
+                    "You lost! Would you like to play again?",
+                    color = Color.White
+                )
+            },
             confirmButton = {
                 Button(onClick = {
                     // Reset the game
-                    boxStates = mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }
+                    boxStates =
+                        mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }
                     gameMessage = ""
                     gameOver = false
                     showGameOverDialog = false
@@ -114,16 +142,16 @@ fun GameScreen(modifier: Modifier = Modifier) {
                 }
             },
             dismissButton = {
-                Button(onClick = { /* Exit game or go back */ }) {
+                Button(onClick = { }) {
                     Text("Exit")
                 }
             }
         )
     } else {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = gameMessage)
+            Text(text = gameMessage, color = Color.White)
             Column {
-                // 5 rows of 4 boxes each
+
                 repeat(5) { rowIndex ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -137,7 +165,7 @@ fun GameScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                // 1 row of 1 box in the center
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -148,8 +176,13 @@ fun GameScreen(modifier: Modifier = Modifier) {
             }
 
             if (!gameOver) {
-                Button(onClick = { showInputDialog = true }) {
-                    Text("Make Your Move")
+                Button(
+                    modifier  = Modifier.fillMaxWidth(),
+                    onClick = { showInputDialog = true }
+                ) {
+                    Text(
+                        "Make Your Move"
+                    )
                 }
             }
         }
@@ -176,7 +209,11 @@ fun GameBox(
     )
 }
 
-fun userSelectBoxes(selection: String, boxStates: MutableList<BoxState>, onComplete: (String) -> Unit) {
+fun userSelectBoxes(
+    selection: String,
+    boxStates: MutableList<BoxState>,
+    onComplete: (String) -> Unit
+) {
     var count = 0
     for (i in boxStates.indices) {
         if (boxStates[i] == BoxState.Unclicked && count < selection.toInt()) {

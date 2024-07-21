@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 fun NormalButton(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick:  () -> Unit
 ) {
     Button(
         modifier = modifier
