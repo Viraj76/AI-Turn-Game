@@ -10,4 +10,4 @@ data class UserEntity(
     val id : Int ?  = null,
     val username : String,
     val password : String
-    )
+)
