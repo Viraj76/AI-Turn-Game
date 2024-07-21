@@ -13,7 +13,8 @@ interface UsersDao {
     @Insert(onConflict =  OnConflictStrategy.REPLACE)
     suspend fun insertUser(userEntity: UserEntity)
 
-    @Query("select * from UserEntity WHERE username = :username AND password = :password")
-    fun gerUser(username : String , password : String)
+    @Query("SELECT COUNT(*) FROM UserEntity")
+    suspend fun isLoggedIn(): Int
+
 
 }
