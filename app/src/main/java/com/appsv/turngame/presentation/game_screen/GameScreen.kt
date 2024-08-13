@@ -25,10 +25,11 @@ import com.appsv.turngame.data.local.room.history.GameHistory
 import com.appsv.turngame.presentation.navigation.Screens
 
 @SuppressLint("MutableCollectionMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
+
 
 @Composable
 fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
+
     var showInfoDialog by remember { mutableStateOf(true) }
     var showInputDialog by remember { mutableStateOf(false) }
     var userSelection by remember { mutableStateOf("") }
@@ -41,6 +42,7 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
             }
         })
     }
+
     var gameMessage by remember { mutableStateOf("") }
     var gameOver by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -48,7 +50,9 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
 
     if (showInfoDialog) {
         AlertDialog(
-            onDismissRequest = { /* Handle dismiss */ },
+            onDismissRequest = {
+
+            },
             title = {
                 Text(
                     "Game Rules",
@@ -85,7 +89,7 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
                         },
                         label = { Text("Select 1 to 4 boxes", color = colorResource(id = R.color.white)) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = TextFieldDefaults.colors().copy(
                             focusedLabelColor = colorResource(id = R.color.white),
                             unfocusedLabelColor = colorResource(id = R.color.white),
                             focusedTextColor = colorResource(id = R.color.white),
@@ -149,7 +153,11 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
             lastUserSelections = userSelection.toInt(),
             gameOutcome = "You lost!"
         )
+
+        // saving history..
+
         gameViewModel.saveGameHistory(gameHistory)
+
         AlertDialog(
             onDismissRequest = { },
             title = { Text("Game Over", color = colorResource(id = R.color.white)) },
@@ -161,8 +169,7 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
             },
             confirmButton = {
                 Button(onClick = {
-                    boxStates =
-                        mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }
+                    boxStates = mutableStateListOf<BoxState>().apply { repeat(21) { add(BoxState.Unclicked) } }
                     gameMessage = ""
                     gameOver = false
                     showGameOverDialog = false
@@ -171,14 +178,11 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
                     Text("Play Again")
                 }
             },
-            dismissButton = {
-
-            }
+            dismissButton = { }
         )
     }
 
     else {
-
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
             Column(modifier = Modifier.padding(10.dp)) {
 
@@ -205,10 +209,7 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
                             tint = Color.Yellow
                         )
                     }
-
-
                 }
-
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -217,8 +218,6 @@ fun GameScreen(gameViewModel: GameViewModel,navController: NavController) {
                     text = gameMessage,
                     color = Color.White
                 )
-
-
 
                 Column {
 
@@ -303,10 +302,10 @@ fun userSelectBoxes(
 }
 
 fun aiMove(userSelection: String, boxStates: MutableList<BoxState>) {
-    val unclickedBoxes = boxStates.indices.filter { boxStates[it] == BoxState.Unclicked }
-    val aiSelection = (5 - userSelection.toInt()).coerceAtMost(unclickedBoxes.size)
+    val unclickedBoxes: List<Int> = boxStates.indices.filter { boxStates[it] == BoxState.Unclicked }
+    val aiSelection: Int = (5 - userSelection.toInt()).coerceAtMost(unclickedBoxes.size)
     if (aiSelection > 0) {
-        val aiSelectedBoxes = unclickedBoxes.take(aiSelection)
+        val aiSelectedBoxes: List<Int> = unclickedBoxes.take(aiSelection)
         for (boxIndex in aiSelectedBoxes) {
             boxStates[boxIndex] = BoxState.AiClicked
         }
